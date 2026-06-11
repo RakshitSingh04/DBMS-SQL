@@ -1,10 +1,8 @@
--- ==============================================================================
--- SQL Assignment 1
--- ==============================================================================
 
--- ------------------------------------------------------------------------------
+-- SQL Assignment 1
+
 -- 1. New Customers Acquired in June 2023
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- The marketing team ran a campaign in June 2023 and wants to see how many new 
 -- customers signed up during that period.
@@ -33,9 +31,9 @@ JOIN telecom_number tn ON tn.contact_mech_id = cm.contact_mech_id
 WHERE py.created_date BETWEEN '2025-06-01' AND '2026-06-30';
 
 
--- ------------------------------------------------------------------------------
+
 -- 2. List All Active Physical Products
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- Merchandising teams often need a list of all physical products to manage 
 -- logistics, warehousing, and shipping.
@@ -54,9 +52,8 @@ JOIN product_type USING(product_type_id)
 WHERE is_physical = 'Y';
 
 
--- ------------------------------------------------------------------------------
 -- 3. Products Missing NetSuite ID
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- A product cannot sync to NetSuite unless it has a valid NetSuite ID. The OMS 
 -- needs a list of all products that still need to be created or updated in NetSuite.
@@ -78,9 +75,8 @@ LEFT JOIN good_identification gi ON gi.product_id = p.product_id
 WHERE gi.id_value IS NULL OR gi.id_value = '';
 
 
--- ------------------------------------------------------------------------------
 -- 4. Product IDs Across Systems
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- To sync an order or product across multiple systems (e.g., Shopify, HotWax, 
 -- ERP/NetSuite), the OMS needs to know each system’s unique identifier for that 
@@ -104,9 +100,8 @@ LEFT JOIN good_identification gi_shopify ON gi_shopify.product_id = p.product_id
     AND gi_shopify.good_identification_type_id = 'SHOPIFY_PROD_ID';
 
 
--- ------------------------------------------------------------------------------
 -- 5. Completed Orders in August 2023
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- After running similar reports for a previous month, you now need all completed 
 -- orders in August 2023 for analysis.
@@ -144,9 +139,8 @@ WHERE oh.ORDER_DATE BETWEEN '2026-01-01' AND '2026-05-31'
   AND oh.STATUS_ID = 'ORDER_COMPLETED';
 
 
--- ------------------------------------------------------------------------------
 -- 7. Newly Created Sales Orders and Payment Methods
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- Finance teams need to see new orders and their payment methods for 
 -- reconciliation and fraud checks.
@@ -166,9 +160,8 @@ FROM order_header oh
 JOIN order_payment_preference opp ON opp.order_id = oh.order_id;
 
 
--- ------------------------------------------------------------------------------
 -- 8. Payment Captured but Not Shipped
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- Finance teams want to ensure revenue is recognized properly. If payment is 
 -- captured but no shipment has occurred, it warrants further review.
@@ -191,9 +184,8 @@ JOIN shipment s ON s.primary_order_id = oh.order_id
     AND s.status_id != 'shipment_shipped';
 
 
--- ------------------------------------------------------------------------------
 -- 9. Orders Completed Hourly
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- Operations teams may want to see how orders complete across the day to 
 -- schedule staffing.
@@ -211,9 +203,8 @@ WHERE status_id = 'order_completed'
 GROUP BY HOUR;
 
 
--- ------------------------------------------------------------------------------
 -- 10. BOPIS Orders Revenue (Last Year)
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- BOPIS (Buy Online, Pickup In Store) is a key retail strategy. Finance wants to 
 -- know the revenue from BOPIS orders for the previous year.
@@ -233,9 +224,8 @@ WHERE oisg.shipment_method_type_id = 'STORE_PICKUP'
   AND oh.order_date < '2026-01-01';
 
 
--- ------------------------------------------------------------------------------
 -- 11. Canceled Orders (Last Month)
--- ------------------------------------------------------------------------------
+
 -- Business Problem:  
 -- The merchandising team needs to know how many orders were canceled in the 
 -- previous month and their reasons.
@@ -255,9 +245,8 @@ WHERE oh.status_id = 'ORDER_CANCELLED'
 GROUP BY os.change_reason;
 
 
--- ------------------------------------------------------------------------------
 -- 12. Product Threshold Value
--- ------------------------------------------------------------------------------
+
 -- Business Problem:
 -- The retailer has set a threshild value for products that are sold online, in 
 -- order to avoid over selling. 
@@ -266,8 +255,5 @@ GROUP BY os.change_reason;
 -- - PRODUCT ID
 -- - THRESHOLD
 -- ------------------------------------------------------------------------------
-SELECT 
-    p.product_id, 
-    pf.minimum_stock AS Threshold
-FROM product p
-JOIN product_facility pf ON pf.product_id = p.product_id;
+SELECT product_id, minimum_stock AS Threshold
+FROM product p;
